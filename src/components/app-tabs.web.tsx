@@ -9,14 +9,13 @@ import {
 import { Pressable, View, StyleSheet } from 'react-native';
 
 import { MaxContentWidth, Spacing } from '@/constants/theme';
+import { gymColors } from '@/constants/gym-data';
 
 import { ThemedText } from './themed-text';
-import { ThemedView } from './themed-view';
 
 export default function AppTabs() {
   return (
-    <Tabs>
-      <TabSlot style={{ height: '100%' }} />
+    <Tabs style={styles.tabs}>
       <TabList asChild>
         <CustomTabList>
           <TabTrigger name="home" href="/" asChild>
@@ -36,20 +35,20 @@ export default function AppTabs() {
           </TabTrigger>
         </CustomTabList>
       </TabList>
+      <TabSlot style={styles.tabSlot} />
     </Tabs>
   );
 }
 
 export function TabButton({ children, isFocused, ref: _ref, ...props }: TabTriggerSlotProps) {
   return (
-    <Pressable {...props} style={({ pressed }) => pressed && styles.pressed}>
-      <ThemedView
-        type={isFocused ? 'backgroundSelected' : 'backgroundElement'}
-        style={styles.tabButtonView}>
-        <ThemedText type="small" themeColor={isFocused ? 'text' : 'textSecondary'}>
-          {children}
-        </ThemedText>
-      </ThemedView>
+    <Pressable
+      {...props}
+      accessibilityState={{ selected: isFocused }}
+      style={({ pressed }) => [styles.tabButton, pressed && styles.pressed]}>
+      <ThemedText type="small" themeColor={isFocused ? 'text' : 'textSecondary'}>
+        {children}
+      </ThemedText>
     </Pressable>
   );
 }
@@ -57,39 +56,45 @@ export function TabButton({ children, isFocused, ref: _ref, ...props }: TabTrigg
 export function CustomTabList(props: TabListProps) {
   return (
     <View {...props} style={styles.tabListContainer}>
-      <ThemedView type="backgroundElement" style={styles.innerContainer}>
+      <View style={styles.innerContainer}>
         {props.children}
-      </ThemedView>
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  tabs: {
+    flex: 1,
+  },
+  tabSlot: {
+    flex: 1,
+  },
   tabListContainer: {
-    position: 'absolute',
     width: '100%',
-    padding: Spacing.three,
-    justifyContent: 'center',
+    backgroundColor: gymColors.card,
     alignItems: 'center',
-    flexDirection: 'row',
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: gymColors.line,
   },
   innerContainer: {
+    width: '100%',
+    maxWidth: MaxContentWidth,
     paddingVertical: Spacing.two,
-    paddingHorizontal: Spacing.two,
-    borderRadius: Spacing.five,
+    paddingHorizontal: Spacing.three,
     flexDirection: 'row',
     alignItems: 'center',
-    flexGrow: 1,
     justifyContent: 'space-between',
     gap: Spacing.one,
-    maxWidth: MaxContentWidth,
   },
-  pressed: {
-    opacity: 0.7,
-  },
-  tabButtonView: {
+  tabButton: {
+    flex: 1,
+    alignItems: 'center',
     paddingVertical: Spacing.two,
     paddingHorizontal: Spacing.one,
     borderRadius: Spacing.three,
+  },
+  pressed: {
+    opacity: 0.7,
   },
 });
