@@ -1,180 +1,69 @@
-import { Image } from 'expo-image';
-import { SymbolView } from 'expo-symbols';
-import { Platform, Pressable, ScrollView, StyleSheet } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useState } from 'react';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 
-import { ExternalLink } from '@/components/external-link';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { Collapsible } from '@/components/ui/collapsible';
-import { WebBadge } from '@/components/web-badge';
-import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
-import { useTheme } from '@/hooks/use-theme';
+import { Badge, Panel, PrimaryButton, Screen, SectionTitle } from '@/components/gym-ui';
+import { gymColors, workoutExercises } from '@/constants/gym-data';
 
-export default function TabTwoScreen() {
-  const safeAreaInsets = useSafeAreaInsets();
-  const insets = {
-    ...safeAreaInsets,
-    bottom: safeAreaInsets.bottom + BottomTabInset + Spacing.three,
+export default function WorkoutsScreen() {
+  const [completed, setCompleted] = useState<string[]>([]);
+  const toggleExercise = (name: string) => {
+    setCompleted((current) => current.includes(name) ? current.filter((item) => item !== name) : [...current, name]);
   };
-  const theme = useTheme();
-
-  const contentPlatformStyle = Platform.select({
-    android: {
-      paddingTop: insets.top,
-      paddingLeft: insets.left,
-      paddingRight: insets.right,
-      paddingBottom: insets.bottom,
-    },
-    web: {
-      paddingTop: Spacing.six,
-      paddingBottom: Spacing.four,
-    },
-  });
 
   return (
-    <ScrollView
-      style={[styles.scrollView, { backgroundColor: theme.background }]}
-      contentInset={insets}
-      contentContainerStyle={[styles.contentContainer, contentPlatformStyle]}>
-      <ThemedView style={styles.container}>
-        <ThemedView style={styles.titleContainer}>
-          <ThemedText type="subtitle">Explore</ThemedText>
-          <ThemedText style={styles.centerText} themeColor="textSecondary">
-            This starter app includes example{'\n'}code to help you get started.
-          </ThemedText>
+    <Screen title="Treinos" subtitle="Sua rotina personalizada para evoluir com consistência.">
+      <Panel style={styles.summary}>
+        <View style={styles.summaryTop}><Badge label="TREINO A · SEGUNDA-FEIRA" /><Text style={styles.duration}>45 min</Text></View>
+        <Text style={styles.summaryTitle}>Pernas e glúteos</Text>
+        <Text style={styles.summaryDescription}>Foco em força e estabilidade. Descanse 60–90 segundos entre as séries.</Text>
+        <View style={styles.progressTrack}><View style={[styles.progress, { width: `${(completed.length / workoutExercises.length) * 100}%` }]} /></View>
+        <Text style={styles.progressLabel}>{completed.length} de {workoutExercises.length} exercícios concluídos</Text>
+      </Panel>
 
-          <ExternalLink href="https://docs.expo.dev" asChild>
-            <Pressable style={({ pressed }) => pressed && styles.pressed}>
-              <ThemedView type="backgroundElement" style={styles.linkButton}>
-                <ThemedText type="link">Expo documentation</ThemedText>
-                <SymbolView
-                  tintColor={theme.text}
-                  name={{ ios: 'arrow.up.right.square', android: 'link', web: 'link' }}
-                  size={12}
-                />
-              </ThemedView>
-            </Pressable>
-          </ExternalLink>
-        </ThemedView>
-
-        <ThemedView style={styles.sectionsWrapper}>
-          <Collapsible title="File-based routing">
-            <ThemedText type="small">
-              This app has two screens: <ThemedText type="code">src/app/index.tsx</ThemedText> and{' '}
-              <ThemedText type="code">src/app/explore.tsx</ThemedText>
-            </ThemedText>
-            <ThemedText type="small">
-              The layout file in <ThemedText type="code">src/app/_layout.tsx</ThemedText> sets up
-              the tab navigator.
-            </ThemedText>
-            <ExternalLink href="https://docs.expo.dev/router/introduction">
-              <ThemedText type="linkPrimary">Learn more</ThemedText>
-            </ExternalLink>
-          </Collapsible>
-
-          <Collapsible title="Android, iOS, and web support">
-            <ThemedView type="backgroundElement" style={styles.collapsibleContent}>
-              <ThemedText type="small">
-                You can open this project on Android, iOS, and the web. To open the web version,
-                press <ThemedText type="smallBold">w</ThemedText> in the terminal running this
-                project.
-              </ThemedText>
-              <Image
-                source={require('@/assets/images/tutorial-web.png')}
-                style={styles.imageTutorial}
-              />
-            </ThemedView>
-          </Collapsible>
-
-          <Collapsible title="Images">
-            <ThemedText type="small">
-              For static images, you can use the <ThemedText type="code">@2x</ThemedText> and{' '}
-              <ThemedText type="code">@3x</ThemedText> suffixes to provide files for different
-              screen densities.
-            </ThemedText>
-            <Image source={require('@/assets/images/react-logo.png')} style={styles.imageReact} />
-            <ExternalLink href="https://reactnative.dev/docs/images">
-              <ThemedText type="linkPrimary">Learn more</ThemedText>
-            </ExternalLink>
-          </Collapsible>
-
-          <Collapsible title="Light and dark mode components">
-            <ThemedText type="small">
-              This template has light and dark mode support. The{' '}
-              <ThemedText type="code">useColorScheme()</ThemedText> hook lets you inspect what the
-              user&apos;s current color scheme is, and so you can adjust UI colors accordingly.
-            </ThemedText>
-            <ExternalLink href="https://docs.expo.dev/develop/user-interface/color-themes/">
-              <ThemedText type="linkPrimary">Learn more</ThemedText>
-            </ExternalLink>
-          </Collapsible>
-
-          <Collapsible title="Animations">
-            <ThemedText type="small">
-              This template includes an example of an animated component. The{' '}
-              <ThemedText type="code">src/components/ui/collapsible.tsx</ThemedText> component uses
-              the powerful <ThemedText type="code">react-native-reanimated</ThemedText> library to
-              animate opening this hint.
-            </ThemedText>
-          </Collapsible>
-        </ThemedView>
-        {Platform.OS === 'web' && <WebBadge />}
-      </ThemedView>
-    </ScrollView>
+      <View>
+        <SectionTitle title="Exercícios" />
+        <View style={styles.exerciseList}>
+          {workoutExercises.map((exercise, index) => {
+            const isDone = completed.includes(exercise.name);
+            return (
+              <Panel key={exercise.name} style={styles.exercise}>
+                <Pressable onPress={() => toggleExercise(exercise.name)} accessibilityRole="checkbox" accessibilityState={{ checked: isDone }} style={[styles.check, isDone && styles.checkDone]}>
+                  <Text style={[styles.checkText, isDone && styles.checkTextDone]}>{isDone ? '✓' : String(index + 1).padStart(2, '0')}</Text>
+                </Pressable>
+                <View style={styles.exerciseInfo}>
+                  <Text style={[styles.exerciseName, isDone && styles.exerciseDone]}>{exercise.name}</Text>
+                  <Text style={styles.exerciseDetail}>{exercise.detail}</Text>
+                </View>
+                <Badge label={exercise.group} />
+              </Panel>
+            );
+          })}
+        </View>
+      </View>
+      <PrimaryButton label={completed.length === workoutExercises.length ? 'Treino concluído!' : 'Finalizar treino'} onPress={() => setCompleted(workoutExercises.map((exercise) => exercise.name))} />
+      <Text style={styles.coachNote}>Dica da instrutora · Mantenha a postura e controle o movimento em cada repetição.</Text>
+    </Screen>
   );
 }
 
 const styles = StyleSheet.create({
-  scrollView: {
-    flex: 1,
-  },
-  contentContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-  },
-  container: {
-    maxWidth: MaxContentWidth,
-    flexGrow: 1,
-  },
-  titleContainer: {
-    gap: Spacing.three,
-    alignItems: 'center',
-    paddingHorizontal: Spacing.four,
-    paddingVertical: Spacing.six,
-  },
-  centerText: {
-    textAlign: 'center',
-  },
-  pressed: {
-    opacity: 0.7,
-  },
-  linkButton: {
-    flexDirection: 'row',
-    paddingHorizontal: Spacing.four,
-    paddingVertical: Spacing.two,
-    borderRadius: Spacing.five,
-    justifyContent: 'center',
-    gap: Spacing.one,
-    alignItems: 'center',
-  },
-  sectionsWrapper: {
-    gap: Spacing.five,
-    paddingHorizontal: Spacing.four,
-    paddingTop: Spacing.three,
-  },
-  collapsibleContent: {
-    alignItems: 'center',
-  },
-  imageTutorial: {
-    width: '100%',
-    aspectRatio: 296 / 171,
-    borderRadius: Spacing.three,
-    marginTop: Spacing.two,
-  },
-  imageReact: {
-    width: 100,
-    height: 100,
-    alignSelf: 'center',
-  },
+  summary: { backgroundColor: gymColors.green, borderColor: gymColors.green, padding: 20 },
+  summaryTop: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
+  duration: { color: '#D5E9DD', fontSize: 12, fontWeight: '700' },
+  summaryTitle: { color: '#FFFFFF', fontSize: 24, fontWeight: '800', marginTop: 22 },
+  summaryDescription: { color: '#DDEDE4', fontSize: 13, lineHeight: 19, marginTop: 7 },
+  progressTrack: { height: 6, borderRadius: 5, backgroundColor: '#3B8064', overflow: 'hidden', marginTop: 22 },
+  progress: { height: 6, backgroundColor: gymColors.lime, borderRadius: 5 },
+  progressLabel: { color: '#DDEDE4', fontSize: 11, marginTop: 7 },
+  exerciseList: { gap: 9 },
+  exercise: { flexDirection: 'row', alignItems: 'center', padding: 13, gap: 12 },
+  check: { width: 35, height: 35, borderRadius: 12, backgroundColor: '#F2F5F3', alignItems: 'center', justifyContent: 'center' },
+  checkDone: { backgroundColor: gymColors.green },
+  checkText: { fontSize: 11, fontWeight: '800', color: gymColors.green },
+  checkTextDone: { color: '#FFFFFF', fontSize: 18 },
+  exerciseInfo: { flex: 1 },
+  exerciseName: { color: gymColors.ink, fontSize: 13, fontWeight: '800' },
+  exerciseDone: { textDecorationLine: 'line-through', color: gymColors.muted },
+  exerciseDetail: { color: gymColors.muted, fontSize: 11, marginTop: 3 },
+  coachNote: { color: gymColors.muted, fontSize: 12, lineHeight: 18, textAlign: 'center', marginHorizontal: 12 },
 });

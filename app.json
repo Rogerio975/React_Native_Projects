@@ -1,11 +1,12 @@
 {
   "expo": {
-    "name": "gym_project_react_native",
-    "slug": "gym_project_react_native",
+    "name": "Viva Fit",
+    "slug": "viva-fit",
+    "description": "Aplicativo de treinos, aulas, alunos e planos para academia.",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "gymprojectreactnative",
+    "scheme": "vivafit",
     "userInterfaceStyle": "automatic",
     "ios": {
       "icon": "./assets/expo.icon"
@@ -28,9 +29,7 @@
       [
         "expo-splash-screen",
         {
-          "backgroundColor": "#208AEF",
-          "image": "./assets/images/splash-icon.png",
-          "imageWidth": 76
+          "backgroundColor": "#F5F7F4"
         }
       ]
     ],
