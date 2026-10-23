@@ -16,7 +16,7 @@ export function Screen({
 }) {
   return (
     <SafeAreaView style={styles.safeArea} edges={['top']}>
-      <View style={styles.header}>
+      <ScrollView contentContainerStyle={styles.page} showsVerticalScrollIndicator={false}>
         <View style={styles.brandRow}>
           <View style={styles.brandMark}>
             <Text style={styles.brandMarkText}>V</Text>
@@ -24,8 +24,6 @@ export function Screen({
           <Text style={styles.brandName}>VIVA<Text style={styles.brandNameStrong}>FIT</Text></Text>
           <View style={styles.avatar}><Text style={styles.avatarText}>MC</Text></View>
         </View>
-      </View>
-      <ScrollView style={styles.scrollView} contentContainerStyle={styles.page} showsVerticalScrollIndicator={false}>
         <Text style={styles.kicker}>ACADEMIA · BEM-ESTAR · MOVIMENTO</Text>
         <Text style={styles.heading}>{title}</Text>
         <Text style={styles.subtitle}>{subtitle}</Text>
@@ -93,9 +91,7 @@ export function PrimaryButton({
 
 const styles = StyleSheet.create({
   safeArea: { flex: 1, backgroundColor: gymColors.background },
-  header: { width: '100%', maxWidth: 760, alignSelf: 'center', paddingHorizontal: 20, paddingTop: 10 },
-  scrollView: { flex: 1 },
-  page: { width: '100%', maxWidth: 760, alignSelf: 'center', paddingHorizontal: 20, paddingBottom: 36 },
+  page: { width: '100%', maxWidth: 760, alignSelf: 'center', paddingHorizontal: 20, paddingTop: 10, paddingBottom: 36 },
   brandRow: { flexDirection: 'row', alignItems: 'center', marginBottom: 25 },
   brandMark: { width: 34, height: 34, borderRadius: 12, backgroundColor: gymColors.green, alignItems: 'center', justifyContent: 'center', marginRight: 9 },
   brandMarkText: { color: gymColors.lime, fontSize: 20, fontWeight: '900' },
